@@ -1,0 +1,56 @@
+/* Ultra Modern Slick Cyberpunk Neon Theme */
+:root {
+  --background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  --foreground: #e0e0e0;
+  --primary: #00fff7;
+  --primary-dark: #0f0c29;
+  --accent: #ff00cc;
+  --muted: #6b7280;
+  --border: #2d2d2d;
+  --neon-glow: 0 0 8px #00fff7, 0 0 16px #ff00cc;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Orbitron', 'Geist', system-ui, sans-serif;
+  text-shadow: 0 0 4px #00fff7, 0 0 8px #ff00cc;
+}
+
+.card {
+  @apply rounded-3xl border border-[var(--border)] bg-[#181825]/80 shadow-lg hover:shadow-neon transition-all duration-300 backdrop-blur-md;
+  box-shadow: var(--neon-glow);
+}
+
+.section-title {
+  @apply text-4xl md:text-5xl font-bold tracking-tight;
+  background: linear-gradient(90deg, #00fff7 0%, #ff00cc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 8px #00fff7, 0 0 16px #ff00cc;
+}
+
+.btn-primary {
+  @apply px-8 py-4 rounded-full font-semibold transition-all duration-300;
+  background: linear-gradient(90deg, #00fff7 0%, #ff00cc 100%);
+  color: #181825;
+  box-shadow: 0 0 8px #00fff7, 0 0 16px #ff00cc;
+}
+
+.btn-secondary {
+  @apply border-2 px-8 py-4 rounded-full font-semibold transition-all duration-300;
+  border-color: var(--primary);
+  color: var(--primary);
+  background: transparent;
+  box-shadow: 0 0 8px #00fff7;
+}
+
+.skill-tag {
+  @apply inline-block px-4 py-2 rounded-full text-sm font-medium border;
+  background: linear-gradient(90deg, #181825 0%, #302b63 100%);
+  color: #00fff7;
+  border-color: #ff00cc;
+  box-shadow: 0 0 8px #ff00cc;
+}
+
+/* Add more cyberpunk styles as needed */
