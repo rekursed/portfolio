@@ -1,0 +1,71 @@
+.job_header {
+  display: grid;
+  grid-template-areas:
+    "role  role  date"
+    "company  company    date"
+    "duration  location .";
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.timeline_date {
+  grid-area: date;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgb(107 114 128);
+  background-color: rgb(243 244 246);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  height: fit-content;
+}
+
+.job_role {
+  grid-area: role;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgb(17 24 39); /* text-gray-900 */
+  line-height: 1.2;
+}
+
+.job_company {
+  grid-area: company;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: rgb(37 99 235); /* text-blue-600 */
+}
+
+.job_duration {
+  grid-area: duration;
+  text-align: left;
+  font-size: 0.875rem;
+  color: rgb(107 114 128); /* text-gray-500 */
+}
+
+.job_location {
+  grid-area: location;
+  text-align: left;
+  font-size: 0.875rem;
+  color: rgb(107 114 128); /* text-gray-500 */
+}
+
+@media (max-width: 640px) {
+  .job_header {
+    grid-template-areas:
+      "role"
+      "company"
+      "duration"
+      "location";
+    grid-template-columns: 1fr;
+  }
+
+  .job_duration,
+  .job_location {
+    text-align: left;
+  }
+}

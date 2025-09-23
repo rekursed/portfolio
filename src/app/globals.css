@@ -39,6 +39,8 @@ body {
 
 .section-title {
   @apply text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  @apply sticky top-0 z-50 py-4 px-4 backdrop-blur-sm bg-white/80 dark:bg-black/80;
+  @apply -mx-4; /* Compensate for the padding */
 }
 
 .subtitle {
@@ -83,12 +85,12 @@ body {
 }
 
 .timeline-item:nth-child(odd) .timeline-content {
-  @apply ml-auto pl-16 pr-0;
+  @apply ml-auto pl-12 pr-12;
   width: calc(50% - 2rem);
 }
 
 .timeline-item:nth-child(even) .timeline-content {
-  @apply mr-auto pr-16 pl-0;
+  @apply mr-auto pr-12 pl-12;
   width: calc(50% - 2rem);
 }
 
@@ -135,7 +137,7 @@ body {
 }
 
 .timeline-item:nth-child(even) .timeline-date {
-  @apply left-4 right-auto translate-x-0;
+  @apply left-80 right-auto translate-x-0;
 }
 
 @media (max-width: 1024px) {
