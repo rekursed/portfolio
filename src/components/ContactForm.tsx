@@ -13,6 +13,8 @@ export function ContactForm() {
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -23,17 +25,33 @@ export function ContactForm() {
     }
 
     try {
-      const token = await executeRecaptcha('contact_form');
+      setIsSubmitting(true);
+      const recaptchaToken = await executeRecaptcha('contact_form');
       
-      // Here you would send the token along with form data to your backend
-      console.log('Form submitted with reCAPTCHA token:', token);
-      console.log('Form data:', formData);
-      
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          recaptchaToken,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
       alert('Thank you for your message! I\'ll get back to you soon.');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
-      console.error('reCAPTCHA error:', error);
-      alert('Could not verify that you are human. Please try again.');
+      console.error('Form submission error:', error);
+      alert('Failed to send message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -100,8 +118,12 @@ export function ContactForm() {
             placeholder="Tell me about your project or opportunity..."
           />
         </div>
-        <button type="submit" className="btn-primary w-full">
-          Send Message
+        <button 
+          type="submit" 
+          className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Sending...' : 'Send Message'}
         </button>
       </form>
     </div>
