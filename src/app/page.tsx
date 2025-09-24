@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { FaGithub, FaLinkedin, FaGlobe, FaEnvelope, FaCode, FaCloud, FaBrain, FaRocket, FaServer, FaAws } from "react-icons/fa6";
 import { useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { jobs } from '@/data/jobs';
 import { JobHeader } from '@/components/jobs/JobHeader';
 
@@ -14,12 +15,30 @@ export default function Home() {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! I&apos;ll get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    
+    if (!executeRecaptcha) {
+      console.error('Execute recaptcha not available');
+      alert('reCAPTCHA not loaded. Please try again.');
+      return;
+    }
+
+    try {
+      const token = await executeRecaptcha('contact_form');
+      
+      // Here you would send the token along with form data to your backend
+      console.log('Form submitted with reCAPTCHA token:', token);
+      console.log('Form data:', formData);
+      
+      alert('Thank you for your message! I\'ll get back to you soon.');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      console.error('reCAPTCHA error:', error);
+      alert('Could not verify that you are human. Please try again.');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

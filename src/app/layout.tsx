@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +44,9 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <main>{children}</main>
+        <main>
+          <ReCaptchaProvider>{children}</ReCaptchaProvider>
+        </main>
         <footer className="bg-gray-900 text-white py-12">
           <div className="container-max mx-auto px-6 text-center">
             <p className="text-gray-400">© {new Date().getFullYear()} Mohammad Hassan. All rights reserved.</p>
