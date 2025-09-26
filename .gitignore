@@ -33,6 +33,11 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# security-sensitive scripts (contain tokens/keys)
+get-telegram-chat-id.js
+**/telegram-*.js
+**/*token*.js
+
 # vercel
 .vercel
 
