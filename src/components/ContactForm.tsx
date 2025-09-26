@@ -18,15 +18,13 @@ export function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!executeRecaptcha) {
-      console.error('Execute recaptcha not available');
-      alert('reCAPTCHA not loaded. Please try again.');
-      return;
-    }
-
     try {
       setIsSubmitting(true);
-      const recaptchaToken = await executeRecaptcha('contact_form');
+      
+      // Only execute reCAPTCHA if it's available (production environment)
+      const recaptchaToken = executeRecaptcha 
+        ? await executeRecaptcha('contact_form')
+        : 'development';
       
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -49,7 +47,8 @@ export function ContactForm() {
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
       console.error('Form submission error:', error);
-      alert('Failed to send message. Please try again later.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send message. Please try again later.';
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -64,10 +63,10 @@ export function ContactForm() {
 
   return (
     <div className="contact-form">
-      <h3 className="text-2xl font-bold mb-6">Send me a message</h3>
+      <h3 className="text-2xl font-bold mb-6" style={{color: 'var(--foreground)'}}>Send me a message</h3>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+          <label htmlFor="name" className="block text-sm font-medium mb-2" style={{color: 'var(--foreground)'}}>Name</label>
           <input
             type="text"
             id="name"
@@ -80,7 +79,7 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+          <label htmlFor="email" className="block text-sm font-medium mb-2" style={{color: 'var(--foreground)'}}>Email</label>
           <input
             type="email"
             id="email"
@@ -93,7 +92,7 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+          <label htmlFor="subject" className="block text-sm font-medium mb-2" style={{color: 'var(--foreground)'}}>Subject</label>
           <input
             type="text"
             id="subject"
@@ -106,7 +105,7 @@ export function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+          <label htmlFor="message" className="block text-sm font-medium mb-2" style={{color: 'var(--foreground)'}}>Message</label>
           <textarea
             id="message"
             name="message"
@@ -118,12 +117,12 @@ export function ContactForm() {
             placeholder="Tell me about your project or opportunity..."
           />
         </div>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Sending...' : 'Send Message'}
+          <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
         </button>
       </form>
     </div>

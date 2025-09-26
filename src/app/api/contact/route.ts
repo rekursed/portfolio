@@ -5,25 +5,27 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, subject, message, recaptchaToken } = body;
 
-    // Verify reCAPTCHA token
-    const recaptchaResponse = await fetch(
-      "https://www.google.com/recaptcha/api/siteverify",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
-      }
-    );
-
-    const recaptchaData = await recaptchaResponse.json();
-
-    if (!recaptchaData.success) {
-      return NextResponse.json(
-        { error: "reCAPTCHA verification failed" },
-        { status: 400 }
+    // Verify reCAPTCHA token if not in development
+    if (process.env.NODE_ENV !== "development") {
+      const recaptchaResponse = await fetch(
+        "https://www.google.com/recaptcha/api/siteverify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+        }
       );
+
+      const recaptchaData = await recaptchaResponse.json();
+
+      if (!recaptchaData.success) {
+        return NextResponse.json(
+          { error: "reCAPTCHA verification failed" },
+          { status: 400 }
+        );
+      }
     }
 
     // Format message for Telegram
@@ -39,6 +41,13 @@ ${message}
     `;
 
     // Send to Telegram
+    console.log(
+      "Sending to Telegram with token:",
+      process.env.TELEGRAM_BOT_TOKEN ? "Token exists" : "No token found",
+      "and chat ID:",
+      process.env.TELEGRAM_CHAT_ID
+    );
+
     const response = await fetch(
       `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
       {
@@ -54,8 +63,12 @@ ${message}
       }
     );
 
+    const responseText = await response.text();
+    console.log("Telegram API response:", responseText);
+
     if (!response.ok) {
-      throw new Error("Failed to send message to Telegram");
+      console.error("Telegram response not ok:", responseText);
+      throw new Error(`Failed to send message to Telegram: ${responseText}`);
     }
 
     return NextResponse.json(
